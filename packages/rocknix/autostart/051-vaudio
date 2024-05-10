@@ -1,0 +1,14 @@
+#!/bin/sh
+
+. /etc/profile
+
+tocon "Configuring virtual Audio..."
+
+VAUDIODRV=$(get_setting audio.v-driver)
+
+if [ -z "${VAUDIODRV}" ]
+then
+  /usr/bin/audio_vdriver.sh --start
+else
+  /usr/bin/audio_vdriver.sh ${VAUDIODRV}
+fi

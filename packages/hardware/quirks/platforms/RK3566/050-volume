@@ -6,3 +6,14 @@
 
 # RK3566 devices have a master volume attached to card 0 that needs to be set to 100% on startup.
 amixer -c 1 set "Master" "100%"
+
+# after virtual device added, we need to set the real device volume to maximum, so grab the real device id
+number=$(wpctl status | grep -m 1 "Built-in Audio Headphones + Internal Speaker" | grep -Eo '[0-9]+' | awk 'NR==1{print; exit}')
+
+if [ -n "$number" ]; then
+  # Set the volume to 100% with the extracted id 
+  wpctl set-volume "$number" 1
+  echo "Default set to $number"
+else
+  echo "Error: Unable to extract number from command output."
+fi
