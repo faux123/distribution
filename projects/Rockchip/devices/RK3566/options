@@ -56,7 +56,7 @@
     GRAPHIC_DRIVERS="mali panfrost"
 
   # OpenGL(X) implementation to use (mesa / no)
-    OPENGL="mesa"
+    OPENGL=""
 
   # OpenGL-ES implementation to use (mesa / no)
     OPENGLES="mesa"
