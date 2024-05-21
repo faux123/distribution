@@ -3,10 +3,10 @@
 # Copyright (C) 2023 JELOS (https://github.com/JustEnoughLinuxOS)
 
 PKG_NAME="emulationstation"
-PKG_VERSION="02e858d50722374a98e26bcb566ee6a08a81b845"
-PKG_GIT_CLONE_BRANCH="main"
+PKG_VERSION="7f46e13fcfda2e8ff543c62f1d297fd2afe9329e"
+PKG_GIT_CLONE_BRANCH="WIP"
 PKG_LICENSE="GPL"
-PKG_SITE="https://github.com/ROCKNIX/emulationstation"
+PKG_SITE="https://github.com/faux123/emulationstation"
 PKG_URL="${PKG_SITE}.git"
 PKG_DEPENDS_TARGET="boost toolchain SDL2 freetype curl freeimage bash rapidjson SDL2_mixer fping p7zip alsa vlc drm_tool pugixml"
 PKG_NEED_UNPACK="busybox"
