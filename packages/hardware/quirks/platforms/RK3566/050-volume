@@ -10,6 +10,11 @@ amixer -c 1 set "Master" "100%"
 # after virtual device added, we need to set the real device volume to maximum, so grab the real device id
 number=$(wpctl status | grep -m 1 "Built-in Audio Headphones" | grep -Eo '[0-9]+' | awk 'NR==1{print; exit}')
 
+# RK3566-X55 case
+if [ -n "$number" ]; then
+  number=$(wpctl status | grep -m 1 "Built-in Audio Internal" | grep -Eo '[0-9]+' | awk 'NR==1{print; exit}')
+fi
+
 if [ -n "$number" ]; then
   # Set the volume to 100% with the extracted id 
   wpctl set-volume "$number" 1
