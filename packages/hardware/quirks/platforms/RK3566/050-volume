@@ -11,7 +11,7 @@ amixer -c 1 set "Master" "100%"
 number=$(wpctl status | grep -m 1 "Built-in Audio Headphones" | grep -Eo '[0-9]+' | awk 'NR==1{print; exit}')
 
 # RK3566-X55 case
-if [ -n "$number" ]; then
+if ! [[ $number =~ ^[0-9]+$ ]]; then
   number=$(wpctl status | grep -m 1 "Built-in Audio Internal" | grep -Eo '[0-9]+' | awk 'NR==1{print; exit}')
 fi
 
