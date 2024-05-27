@@ -3,8 +3,8 @@
 # Copyright (C) 2023 JELOS (https://github.com/JustEnoughLinuxOS)
 
 PKG_NAME="emulationstation"
-PKG_VERSION="7f46e13fcfda2e8ff543c62f1d297fd2afe9329e"
-PKG_GIT_CLONE_BRANCH="WIP"
+PKG_VERSION="5a19c01592f4a8d23c9d244066ba4727725315a5"
+PKG_GIT_CLONE_BRANCH="WIP2"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/faux123/emulationstation"
 PKG_URL="${PKG_SITE}.git"
@@ -43,8 +43,10 @@ PKG_CMAKE_OPTS_TARGET+=" -DENABLE_EMUELEC=1 \
                          -DDISABLE_KODI=1 \
                          -DENABLE_FILEMANAGER=0 \
                          -DCEC=0 \
-                         -DENABLE_PULSE=1 \
-                         -DUSE_SYSTEM_PUGIXML=1"
+                         -DENABLE_PULSE=0 \
+                         -DUSE_SYSTEM_PUGIXML=1 \
+                         -DCMAKE_BUILD_TYPE=Debug"
+
 
 ##########################################################################################################
 # The following allows building Emulation station from local copy by using EMULATIONSTATION_SRC.
