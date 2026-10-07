@@ -1,0 +1,34 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+
+/dts-v1/;
+
+#include "rk3566-powkiddy-rgb30.dts"
+
+/*
+ * Later RGB30 boards replace the TCS4525 CPU regulator at 0x1c with a
+ * FAN53555 compatible part at 0x40. The Generic U-Boot detects this and
+ * patches rk3566-powkiddy-rgb30.dtb at boot. This file is for cards that
+ * still boot an older U-Boot with "FDT .../rk3566-powkiddy-rgb30r2.dtb"
+ * in extlinux.conf; an update never rewrites either of those.
+ */
+
+/delete-node/ &vdd_cpu;
+
+&i2c0 {
+	vdd_cpu: regulator@40 {
+		compatible = "fcs,fan53555";
+		reg = <0x40>;
+		fcs,suspend-voltage-selector = <1>;
+		regulator-always-on;
+		regulator-boot-on;
+		regulator-min-microvolt = <712500>;
+		regulator-max-microvolt = <1390000>;
+		regulator-name = "vdd_cpu";
+		regulator-ramp-delay = <2300>;
+		vin-supply = <&vcc_sys>;
+
+		regulator-state-mem {
+			regulator-off-in-suspend;
+		};
+	};
+};
