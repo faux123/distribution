@@ -42,6 +42,17 @@ then
   done
 fi
 
+### Quirks write to profile.d, read it again so the start scripts get their settings
+set -a
+for CONFIG in /storage/.config/profile.d/*
+do
+  if [ -f "${CONFIG}" ]
+  then
+    . "${CONFIG}"
+  fi
+done
+set +a
+
 ### Start the automount service
 tocon "Starting storage services..."
 systemctl start rocknix-automount
