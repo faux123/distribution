@@ -13,6 +13,44 @@ then
   systemctl start pipewire-pulse
 fi
 
+### Downmix the internal sink to mono on devices with a single speaker.
+### WirePlumber reads its config at start, so restart it when the config changes.
+### The quirk writes its setting during this boot, after the profile was read.
+MONO_CONF="/storage/.config/wireplumber/wireplumber.conf.d/50-mono-speaker.conf"
+MONO_WAIT=""
+DEVICE_MONO_SPEAKER_SINK=$(. /storage/.config/profile.d/002-audio_path 2>/dev/null; echo "${DEVICE_MONO_SPEAKER_SINK}")
+if [ -n "${DEVICE_MONO_SPEAKER_SINK}" ]
+then
+  sed "s|@SINK@|${DEVICE_MONO_SPEAKER_SINK}|g" /usr/share/wireplumber/mono-speaker.conf >/tmp/50-mono-speaker.conf
+  if ! cmp -s /tmp/50-mono-speaker.conf "${MONO_CONF}"
+  then
+    mkdir -p "${MONO_CONF%/*}"
+    cp -f /tmp/50-mono-speaker.conf "${MONO_CONF}"
+    MONO_WAIT="mono_speaker"
+  fi
+  rm -f /tmp/50-mono-speaker.conf
+elif [ -e "${MONO_CONF}" ]
+then
+  rm -f "${MONO_CONF}"
+  MONO_WAIT="alsa_output"
+fi
+
+[ -n "${MONO_WAIT}" ] && systemctl restart wireplumber
+
+### hdmi_sense picks the default sink below, so the sink list has to be settled first.
+[ -n "${DEVICE_MONO_SPEAKER_SINK}" ] && MONO_WAIT="mono_speaker"
+if [ -n "${MONO_WAIT}" ]
+then
+  for i in $(seq 1 20)
+  do
+    pactl list short sinks 2>/dev/null | grep -q "${MONO_WAIT}" && break
+    sleep 0.25
+  done
+fi
+
+### Apply the saved mono or stereo choice.
+[ -n "${DEVICE_MONO_SPEAKER_SINK}" ] && /usr/bin/mono_speaker restore
+
 ### Auto switch between internal and bluetooth devices
 pactl load-module module-switch-on-connect blocklist="Dirtywave_M8|DirtyWave_M8|hdmi" 2>/dev/null
 

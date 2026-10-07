@@ -95,6 +95,8 @@ monitor.bluez.rules = [
 ]
 EOF
 
+  cp -f ${PKG_DIR}/config/mono-speaker.conf ${INSTALL}/usr/share/wireplumber/
+
 # Platform-specific config files
 if [ -d "${PKG_DIR}/config/${DEVICE}" ]; then 
   cp -f ${PKG_DIR}/config/${DEVICE}/*.conf ${INSTALL}/usr/share/wireplumber/wireplumber.conf.d/

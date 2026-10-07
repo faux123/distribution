@@ -1,0 +1,35 @@
+#!/bin/sh
+# SPDX-License-Identifier: GPL-2.0
+# Copyright (C) 2026-present ROCKNIX (https://github.com/ROCKNIX)
+
+# Switch the mono_speaker sink between the mono downmix and plain stereo.
+# Stereo is for headphones on devices that cannot detect the jack.
+
+. /etc/profile.d/001-functions
+
+case "${1}" in
+  enable)
+    set_setting audio.mono 1
+  ;;
+  disable)
+    set_setting audio.mono 0
+  ;;
+  restore)
+  ;;
+  *)
+    echo "Usage: ${0} enable|disable|restore" >&2
+    exit 1
+  ;;
+esac
+
+### Each output is its own channel at full gain, or half of both channels.
+if [ "$(get_setting audio.mono)" = "0" ]
+then
+  SAME="1.0"
+  OTHER="0.0"
+else
+  SAME="0.5"
+  OTHER="0.5"
+fi
+
+pw-cli set-param mono_speaker Props "{ params = [ \"mixL:Gain 1\" ${SAME} \"mixL:Gain 2\" ${OTHER} \"mixR:Gain 1\" ${OTHER} \"mixR:Gain 2\" ${SAME} ] }" >/dev/null
